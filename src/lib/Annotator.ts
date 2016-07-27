@@ -115,6 +115,7 @@ export class Annotator extends EventBase {
         let slices = raw.split(/(.*?[\n\r。])/g)
             .filter((value) => { return value.length > 0 })
             .map((value) => { return value.replace('\n',' ');});
+        slices = [raw.split('\n').join(' ')];
         let lines = [];
         for (let label of labels) {
             this.labels.create(label.id, label.category, label.pos);
