@@ -8,6 +8,7 @@ import {Draw} from './lib/Draw';
 import {Paragraph} from './lib/components/Paragraph';
 import {LabelContainer} from './lib/components/Label';
 import {Util} from './lib/util/Util';
+import {Configuration} from './lib/Configuration';
 
 enum States {
     Init,
@@ -25,24 +26,7 @@ export class Annotator extends EventBase {
     public linkable = false;
     public underscorable = false;
     public progress = 0;
-    private config = {
-        visible:{
-            relation: true,
-            highlight: true,
-            label: true
-        },
-        style:{
-            padding: 10,
-            baseLeft: 30,
-            rectColor:'',
-            bgColor:'white',
-            width: 0,
-            height: 0
-        },
-        puncLen : 80,
-        linesPerRender : 15,
-        selectable : false
-    };
+    private config = new Configuration();
     private draw;
     private raw;
     private labelLineMap = {};

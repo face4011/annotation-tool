@@ -1,5 +1,31 @@
-import {LineContainer, LinePosition} from './Line';
+/**
+ * Created by grzhan on 17/1/10.
+ */
+import {LineContainer, LinePosition} from '../components/Line';
 import {Util} from '../util/Util';
+import {Store} from "./Store";
+
+export class LabelStore extends Store<Label> {
+    private lines: LineContainer;
+    constructor(lines:LineContainer, labels?:Array<LabelData>) {
+        super();
+        this.lines = lines;
+        if (labels)
+            this.load(labels);
+    }
+
+    public load(labelsData:Array<LabelData>) {
+        for (let labelData of labelsData) {
+            let {id, category, pos} = labelData;
+            let label:Label = new Label(id, category, pos);
+
+        }
+    }
+
+    public clear() {
+
+    }
+}
 
 export class Label {
     public id;
@@ -35,39 +61,6 @@ export class Label {
     }
 }
 
-export class LabelContainer {
-    private labels = [];
-    private lineMap = {};
-
-    public create(id, category, pos) {
-        this.insert(new Label(id, category, pos));
-    }
-
-    public push(label:Label) {
-        this.insert(label);
-    }
-
-    public get(id) {
-        return this.labels[id];
-    }
-
-    public get length() {
-        return this.labels.length;
-    }
-
-    public gen(label) {
-        return this.labels;
-    }
-
-    private insert(target) {
-        let i = 0;
-        for (let label of this.labels) {
-            if (label.pos[0] < target.pos[0])
-                i += 1;
-        }
-        this.labels.splice(i, 0, target);
-    }
-}
 
 export interface LabelData {
     id:number;
