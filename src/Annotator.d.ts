@@ -1,5 +1,5 @@
 /// <reference path="../typings/svgjs.d.ts" />
-import { EventBase } from './lib/util/EventBase';
+import { EventBase } from './lib/common/EventBase';
 export declare class Annotator extends EventBase {
     svg: any;
     group: {};

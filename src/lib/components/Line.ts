@@ -1,5 +1,5 @@
 import {Label, LabelData} from "../store/LabelStore";
-import {Util} from "../util/Util";
+import {Util} from "../common/Util";
 
 /**
  * Created by grzhan on 16/7/1.
@@ -107,4 +107,3 @@ export class LineContainer {
     }
 }
 
-export interface LinePosition {x:number; y:number; no:number}

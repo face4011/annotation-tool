@@ -1,5 +1,5 @@
 import {LineContainer, LinePosition} from './Line';
-import {Util} from '../util/Util';
+import {Util} from '../common/Util';
 
 export class Label {
     public id;

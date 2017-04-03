@@ -40,3 +40,37 @@ export class Util {
         throw new Error(`synyi-annotation-tool: ${message}`);
     }
 }
+
+export const invariant = (condition:any, message?:string) => {
+    if (!condition) {
+        let error:Error;
+        if (message === undefined) {
+            error = new Error(`Minified exception occurred.`);
+        } else {
+            message = '(poplar) ' + message;
+            error = new Error(message);
+            error.name = 'Invariant Violation';
+        }
+        throw error;
+    }
+};
+
+export const clone = (object:any): any => {
+    // TODO: may use lodash.deepClone instead
+    return JSON.parse(JSON.stringify(object));
+};
+
+// FIXME: Typescript Generic
+export const end = (arr:Array<any>): any => {
+    return arr[arr.length - 1];
+};
+
+// FIXME: Typescript Generic
+export const endIndex = (arr:Array<any>): any => {
+    return arr.length > 0 ? arr.length - 1: 0;
+};
+
+// FIXME: Typescript Generic
+export const start = (arr:Array<any>): any => {
+    return arr[0];
+};

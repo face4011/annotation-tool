@@ -3,7 +3,7 @@
  */
 /// <reference path="../../typings/svgjs.d.ts" />
 
-import {Util} from './util/Util';
+import {Util} from './common/Util';
 
 export class Draw {
     private board;

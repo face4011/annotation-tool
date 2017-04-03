@@ -2,12 +2,12 @@
  * Created by grzhan on 16/7/1.
  */
 /// <reference path="../typings/svgjs.d.ts" />
-import {TextSelector, SelectorDummyException} from './lib/util/TextSelector';
-import {EventBase} from './lib/util/EventBase';
+import {TextSelector, SelectorDummyException} from './lib/common/TextSelector';
+import {EventBase} from './lib/common/EventBase';
 import {Draw} from './lib/Draw';
 import {Paragraph} from './lib/components/Paragraph';
 import {LabelContainer} from './lib/components/Label';
-import {Util} from './lib/util/Util';
+import {Util} from './lib/common/Util';
 import {Configuration} from './lib/Configuration';
 
 enum States {
