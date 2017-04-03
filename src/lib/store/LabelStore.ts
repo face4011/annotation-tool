@@ -114,6 +114,7 @@ export class LabelStore extends Store<Label> {
         this._linesCount = [];
         this._labels = [];
         this._labelsInLines = [];
+        this._linesAccumatedCount = [];
         this._IDMap = {};
     }
 }
