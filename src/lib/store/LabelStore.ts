@@ -7,15 +7,15 @@ import {Store} from "./Store";
 export type LabelID = number;
 export type LinesCount = Array<number>;
 export type LineNumber = number;
-export type LineRange = Array<number>;
 export interface LinePosition {
     line: LineNumber,
     position: number
 }
+export type LineRange = [LinePosition, LinePosition];
 export interface Label {
     id:number;
     category: number;
-    pos: Array<number>;
+    pos: [number, number];
 }
 
 export class LabelStore extends Store<Label> {
@@ -60,7 +60,7 @@ export class LabelStore extends Store<Label> {
         return clone(this._labelsInLines[lineNumber - 1]);
     }
 
-    public getLabelLineRangeById(id: LabelID): Array<LinePosition> {
+    public getLabelLineRangeById(id: LabelID): LineRange {
         // FIXME: need test later
         invariant(
             this._IDMap[id],
