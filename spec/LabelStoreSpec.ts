@@ -27,4 +27,12 @@ describe("with LabelStore", () => {
         expect(label.pos[1]).toEqual(81);
         expect(label.category).toEqual(4);
     });
+
+    it('should contain an efficient binary search method', () => {
+        expect((this.labelStore as any)._binarySearchLineNumber(10, 0, 3)).toEqual(0);
+        expect((this.labelStore as any)._binarySearchLineNumber(58, 0, 3)).toEqual(1);
+        expect((this.labelStore as any)._binarySearchLineNumber(204, 0, 3)).toEqual(2);
+        expect(() => {(this.labelStore as any)._binarySearchLineNumber(273, 0, 3)}).toThrow();
+    });
+
 });

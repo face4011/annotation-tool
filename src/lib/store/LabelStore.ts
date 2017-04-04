@@ -84,16 +84,17 @@ export class LabelStore extends Store<Label> {
                                     end: LineNumber): LineNumber {
         // FIXME: need test later
         if (start >= end) {
+            const count = this._linesAccumulatedCount[start];
             invariant(
-                position <= this._linesAccumulatedCount[start],
-                `LabelStore._binarySearchLineNumber: Label position(${position}) is out of range`
+                position < count,
+                `LabelStore._binarySearchLineNumber: Label position(${position}) is out of range(${start}:${count})`
             );
             return start;
         }
-        const middle:LineNumber = (start + end) / 2;
+        const middle:LineNumber = Math.floor((start + end) / 2);
         return this._linesAccumulatedCount[middle] > position
-            ? this._binarySearchLineNumber(position, start, middle - 1) + 1
-            : this._binarySearchLineNumber(position, middle, end) + 1;
+            ? this._binarySearchLineNumber(position, start, middle)
+            : this._binarySearchLineNumber(position, middle + 1, end);
     }
 
     private _parseLabelsInLines(): void {
