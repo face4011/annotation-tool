@@ -3,7 +3,7 @@
  */
 /// <reference path="../typings/index.d.ts" />
 
-import {LabelStore, LinesCount, Label} from "../src/lib/store/LabelStore";
+import {LabelStore, LinesCount, Label, LabelLineRange} from "../src/lib/store/LabelStore";
 
 describe("with LabelStore", () => {
     beforeAll(() => {
@@ -35,4 +35,15 @@ describe("with LabelStore", () => {
         expect(() => {(this.labelStore as any)._binarySearchLineNumber(273, 0, 3)}).toThrow();
     });
 
+    it("should support retrieve specific label's range", () => {
+        const testRangeOne: LabelLineRange = this.labelStore.getLabelLineRangeById(1);
+        expect(testRangeOne[0].line).toEqual(0);
+        expect(testRangeOne[0].position).toEqual(1);
+        expect(testRangeOne[1].line).toEqual(0);
+        expect(testRangeOne[0].position).toEqual(5);
+        const testRangeTwo: LabelLineRange = this.labelStore.getLabelLineRangeById(2);
+        expect(testRangeTwo[0].line).toEqual(0);
+        expect(testRangeTwo[1].line).toEqual(1);
+        expect(testRangeTwo[1].position).toEqual(23);
+    });
 });

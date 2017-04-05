@@ -1,7 +1,7 @@
 /**
  * Created by grzhan on 17/1/10.
  */
-import {Util, invariant, clone, end, endIndex} from '../common/Util';
+import {Util, invariant, clone, end, endIndex, nestPush} from '../common/Util';
 import {Store} from "./Store";
 
 export type LabelID = number;
@@ -11,20 +11,21 @@ export interface LinePosition {
     line: LineNumber,
     position: number
 }
-export type LineRange = [LinePosition, LinePosition];
+export type LabelLineRange = [LinePosition, LinePosition];
 export interface Label {
     id:number;
     category: number;
     pos: [number, number];
 }
 
-export class LabelStore extends Store<Label> {
+export class LabelStore extends Store {
 
     private _linesCount: LinesCount;
     private _linesAccumulatedCount: LinesCount;
     private _labels: Array<Label>;
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
+
 
     constructor(linesCount: LinesCount, labels: Array<Label>) {
         super();
@@ -60,8 +61,7 @@ export class LabelStore extends Store<Label> {
         return clone(this._labelsInLines[lineNumber - 1]);
     }
 
-    public getLabelLineRangeById(id: LabelID): LineRange {
-        // FIXME: need test later
+    public getLabelLineRangeById(id: LabelID): LabelLineRange {
         invariant(
             this._IDMap[id],
             `LabelStore.getLabelLineRangeById: Label id(${id}) does not map to a registered label)`
@@ -73,16 +73,15 @@ export class LabelStore extends Store<Label> {
         const endLineNumber: LineNumber = this._binarySearchLineNumber(endPos, 0,
             endIndex(this._linesAccumulatedCount));
         const startLinePosition: LinePosition = {line: startLineNumber,
-            position: startPos - this._linesAccumulatedCount[startLineNumber]};
+            position: startPos - (this._linesAccumulatedCount[startLineNumber - 1] || 0)};
         const endLinePosition:LinePosition = {line: endLineNumber,
-            position: endPos - this._linesAccumulatedCount[endLineNumber]};
+            position: endPos - (this._linesAccumulatedCount[endLineNumber - 1] || 0)};
         return [startLinePosition, endLinePosition];
     }
 
     private _binarySearchLineNumber(position: number,
                                     start: LineNumber,
                                     end: LineNumber): LineNumber {
-        // FIXME: need test later
         if (start >= end) {
             const count = this._linesAccumulatedCount[start];
             invariant(
@@ -98,7 +97,12 @@ export class LabelStore extends Store<Label> {
     }
 
     private _parseLabelsInLines(): void {
-        this._labelsInLines = [];
+        this._labels.map((label) => {
+            const [{line: startLine}, {line: endLine}] = this.getLabelLineRangeById(label.id);
+            nestPush(this._labelsInLines, startLine, label);
+            if (startLine !== endLine)
+                nestPush(this._labelsInLines, endLine, label);
+        });
     }
 
     private _setIDMap() {
@@ -111,9 +115,11 @@ export class LabelStore extends Store<Label> {
         });
     }
 
-    private _clear() {
-        this._linesCount = [];
-        this._labels = [];
+    private _clear(update:boolean=false) {
+        if (!update) {
+            this._linesCount = [];
+            this._labels = [];
+        }
         this._labelsInLines = [];
         this._linesAccumulatedCount = [];
         this._IDMap = {};

@@ -3,8 +3,7 @@
  */
 import {EventBase} from "../common/EventBase";
 
-export class Store<T> extends EventBase {
-    private data:Array<T>;
+export class Store extends EventBase {
     constructor() {
         super();
     }
