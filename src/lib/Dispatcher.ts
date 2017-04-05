@@ -35,7 +35,7 @@ export class Dispatcher<TPayload> {
         delete this._callbacks[id];
     }
 
-    public waitFor(ids: Array<DispatchToken>): void {
+    public waitFor(ids: DispatchToken[]): void {
         invariant(
             this._isDispatching,
             'Dispatcher.waitFor(...): Must be invoked while dispatching'
@@ -63,7 +63,7 @@ export class Dispatcher<TPayload> {
         );
         this._startDispatching(payload);
         try {
-            for (var id in this._callbacks) {       // FIXME: A better implementation
+            for (var id in this._callbacks) {       // TODO: A better implementation
                 // ???
                 if (this._isPending[id]) {
                     continue;
@@ -86,7 +86,7 @@ export class Dispatcher<TPayload> {
     }
 
     private _startDispatching(payload: TPayload): void {
-        for (let id in this._callbacks) {                 // FIXME: A better implementation
+        for (let id in this._callbacks) {                 // TODO: A better implementation
             this._isPending[id] = false;
             this._isHandled[id] = false;
         }

@@ -5,7 +5,7 @@ import {Util, invariant, clone, end, endIndex, nestPush} from '../common/Util';
 import {Store} from "./Store";
 
 export type LabelID = number;
-export type LinesCount = Array<number>;
+export type LinesCount = number[];
 export type LineNumber = number;
 export interface LinePosition {
     line: LineNumber,
@@ -22,12 +22,12 @@ export class LabelStore extends Store {
 
     private _linesCount: LinesCount;
     private _linesAccumulatedCount: LinesCount;
-    private _labels: Array<Label>;
+    private _labels: Label[];
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
 
 
-    constructor(linesCount: LinesCount, labels: Array<Label>) {
+    constructor(linesCount: LinesCount, labels: Label[]) {
         super();
         this._clear();
         this._labels = labels;
@@ -41,7 +41,7 @@ export class LabelStore extends Store {
         this._parseLabelsInLines();
     }
 
-    public getLabels(): Array<Label> {
+    public getLabels(): Label[] {
         return clone(this._labels);
     }
 
@@ -53,7 +53,7 @@ export class LabelStore extends Store {
         return clone(this._IDMap[id]);
     }
 
-    public selectLabelsByLine(lineNumber: LineNumber): Array<Label> {
+    public selectLabelsByLine(lineNumber: LineNumber): Label[] {
         invariant(
             lineNumber <= this._labelsInLines.length && lineNumber > 0,
             `LabelStore.getLabelsByLine: Line number #${lineNumber} is out of range`

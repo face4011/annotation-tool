@@ -40,7 +40,7 @@ describe("with LabelStore", () => {
         expect(testRangeOne[0].line).toEqual(0);
         expect(testRangeOne[0].position).toEqual(1);
         expect(testRangeOne[1].line).toEqual(0);
-        expect(testRangeOne[0].position).toEqual(5);
+        expect(testRangeOne[1].position).toEqual(5);
         const testRangeTwo: LabelLineRange = this.labelStore.getLabelLineRangeById(2);
         expect(testRangeTwo[0].line).toEqual(0);
         expect(testRangeTwo[1].line).toEqual(1);

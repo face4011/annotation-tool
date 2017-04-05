@@ -60,11 +60,11 @@ export const clone = (object:any): any => {
     return JSON.parse(JSON.stringify(object));
 };
 
-export const end = <T>(arr:Array<T>): T => {
+export const end = <T>(arr:T[]): T => {
     return arr[arr.length - 1];
 };
 
-export const start = <T>(arr:Array<T>): T => {
+export const start = <T>(arr:T[]): T => {
     return arr[0];
 };
 
