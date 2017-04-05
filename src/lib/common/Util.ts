@@ -60,17 +60,21 @@ export const clone = (object:any): any => {
     return JSON.parse(JSON.stringify(object));
 };
 
-// FIXME: Typescript Generic
-export const end = (arr:Array<any>): any => {
+export const end = <T>(arr:Array<T>): T => {
     return arr[arr.length - 1];
 };
 
-// FIXME: Typescript Generic
-export const endIndex = (arr:Array<any>): any => {
+export const start = <T>(arr:Array<T>): T => {
+    return arr[0];
+};
+
+export const endIndex = <T>(arr:T[]): number => {
     return arr.length > 0 ? arr.length - 1: 0;
 };
 
-// FIXME: Typescript Generic
-export const start = (arr:Array<any>): any => {
-    return arr[0];
+export const nestPush = <T>(arr:Array<Array<T>>, index: number, element: T):number => {
+    if (arr[index] === undefined)
+        arr[index] = [];
+    return arr[index].push(element);
 };
+
