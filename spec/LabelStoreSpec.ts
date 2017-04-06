@@ -46,4 +46,15 @@ describe("with LabelStore", () => {
         expect(testRangeTwo[1].line).toEqual(1);
         expect(testRangeTwo[1].position).toEqual(23);
     });
+
+    it("should support select labels according to line number", () => {
+        const labelsInLineOne:Label[] = this.labelStore.selectLabelsByLine(0);
+        const labelsInLineTwo:Label[] = this.labelStore.selectLabelsByLine(1);
+        expect(labelsInLineOne.length).toEqual(2);
+        expect(labelsInLineTwo.length).toEqual(1);
+        const labelInLineOne:Label = labelsInLineOne[0];
+        const labelInLineTwo:Label = labelsInLineTwo[0];
+        expect(labelInLineOne.id).toEqual(1);
+        expect(labelInLineTwo.id).toEqual(2);
+    });
 });

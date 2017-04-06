@@ -55,10 +55,10 @@ export class LabelStore extends Store {
 
     public selectLabelsByLine(lineNumber: LineNumber): Label[] {
         invariant(
-            lineNumber <= this._labelsInLines.length && lineNumber > 0,
+            lineNumber < this._labelsInLines.length && lineNumber >= 0,
             `LabelStore.getLabelsByLine: Line number #${lineNumber} is out of range`
         );
-        return clone(this._labelsInLines[lineNumber - 1]);
+        return clone(this._labelsInLines[lineNumber]);
     }
 
     public getLabelLineRangeById(id: LabelID): LabelLineRange {
