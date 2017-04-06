@@ -25,7 +25,7 @@ export class LabelStore extends Store {
     private _labels: Label[];
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
-
+    private _lastID: number;
 
     constructor(linesCount: LinesCount, labels: Label[]) {
         super();
@@ -37,8 +37,9 @@ export class LabelStore extends Store {
             this._linesAccumulatedCount.push(sum);
             return sum;
         }, 0);
-        this._setIDMap();
-        this._parseLabelsInLines();
+        labels.map((label) => {
+            this._updateLabelState(label);
+        });
     }
 
     public getLabels(): Label[] {
@@ -79,6 +80,13 @@ export class LabelStore extends Store {
         return [startLinePosition, endLinePosition];
     }
 
+    public addLabel(category:number, position: [number, number]):Label {
+        const id:number = this._lastID + 1;
+        const label:Label = {category, pos: position, id};
+        this._updateLabelState(label);
+        return label;
+    }
+
     private _binarySearchLineNumber(position: number,
                                     start: LineNumber,
                                     end: LineNumber): LineNumber {
@@ -96,23 +104,25 @@ export class LabelStore extends Store {
             : this._binarySearchLineNumber(position, middle + 1, end);
     }
 
-    private _parseLabelsInLines(): void {
-        this._labels.map((label) => {
-            const [{line: startLine}, {line: endLine}] = this.getLabelLineRangeById(label.id);
-            nestPush(this._labelsInLines, startLine, label);
-            if (startLine !== endLine)
-                nestPush(this._labelsInLines, endLine, label);
-        });
+    private _updateLabelState(label:Label): void {
+        this._setIDMap(label);
+        this._parseLabelInLines(label);
+        this._lastID = Math.max(this._lastID, label.id);
     }
 
-    private _setIDMap() {
-        this._labels.map((label) => {
-            invariant(
-                this._IDMap[label.id] === undefined,
-                `LabelStore._setIDMap: Label id#${label.id} is duplicated`
-            );
-            this._IDMap[label.id] = label;
-        });
+    private _parseLabelInLines(label: Label): void {
+        const [{line: startLine}, {line: endLine}] = this.getLabelLineRangeById(label.id);
+        nestPush(this._labelsInLines, startLine, label);
+        if (startLine !== endLine)
+            nestPush(this._labelsInLines, endLine, label);
+    }
+
+    private _setIDMap(label: Label) {
+        invariant(
+            this._IDMap[label.id] === undefined,
+            `LabelStore._setIDMap: Label id#${label.id} is duplicated`
+        );
+        this._IDMap[label.id] = label;
     }
 
     private _clear(update:boolean=false) {
@@ -123,6 +133,7 @@ export class LabelStore extends Store {
         this._labelsInLines = [];
         this._linesAccumulatedCount = [];
         this._IDMap = {};
+        this._lastID = 0;
     }
 }
 
