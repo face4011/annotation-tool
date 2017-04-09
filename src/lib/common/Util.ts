@@ -60,6 +60,12 @@ export const clone = (object:any): any => {
     return JSON.parse(JSON.stringify(object));
 };
 
+export const each = <T>(arr:T[], callback: (element : T) => void) : void => {
+    for (const element of arr) {
+        callback(element);
+    }
+};
+
 export const end = <T>(arr:T[]): T => {
     return arr[arr.length - 1];
 };

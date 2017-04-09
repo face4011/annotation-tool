@@ -1,7 +1,7 @@
 /**
  * Created by grzhan on 17/1/10.
  */
-import {Util, invariant, clone, end, endIndex, nestPush} from '../common/Util';
+import {Util, invariant, clone, end, endIndex, nestPush, each} from '../common/Util';
 import {Store} from "./Store";
 
 export type LabelID = number;
@@ -37,7 +37,7 @@ export class LabelStore extends Store {
             this._linesAccumulatedCount.push(sum);
             return sum;
         }, 0);
-        labels.map((label) => {
+        each(labels, (label) => {
             this._updateLabelState(label);
         });
     }
@@ -80,7 +80,7 @@ export class LabelStore extends Store {
         return [startLinePosition, endLinePosition];
     }
 
-    public addLabel(category:number, position: [number, number]):Label {
+    public add(category:number, position: [number, number]):Label {
         const id:number = this._lastID + 1;
         const label:Label = {category, pos: position, id};
         this._updateLabelState(label);
@@ -136,45 +136,3 @@ export class LabelStore extends Store {
         this._lastID = 0;
     }
 }
-
-
-// export class Label {
-//     public id;
-//     public category;
-//     public pos = [0,0];
-//     public lineNo;
-//     constructor(id, category, pos) {
-//         this.id = id;
-//         this.category = category;
-//         this.pos[0] = pos[0];
-//         this.pos[1] = pos[1];
-//     }
-//
-//     public isTruncate(pos) {
-//         return (this.pos[0] <= pos && this.pos[1] > pos);
-//     }
-//
-//     static getPosInLine(lines:LineContainer, x:number, y:number) : LinePosition {
-//         let no:number = 0;
-//         let linesLength:Array<number> = lines.getLinesLength();
-//         for (let length of linesLength) {
-//             no += 1;
-//             if (x - length < 0) break;
-//             x -= length;
-//         }
-//         for (let length of linesLength) {
-//             no += 1;
-//             if (y - length < 0) break;
-//             y -= length;
-//         }
-//         if (x > y) Util.throwError(`Invalid selection, x: ${x}, y: ${y}, line number: ${no}`);
-//         return {x, y, no};
-//     }
-// }
-//
-//
-// export interface LabelData {
-//     id:number;
-//     category:number;
-//     pos: Array<number>;
-// }

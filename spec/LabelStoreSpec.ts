@@ -6,7 +6,7 @@
 import {LabelStore, LinesCount, Label, LabelLineRange} from "../src/lib/store/LabelStore";
 
 describe("with LabelStore", () => {
-    beforeAll(() => {
+    beforeEach(() => {
         const linesCount: LinesCount = [58, 69, 78, 67];
         const labels: Array<Label> = [
             {id:1, pos:[1,5], category: 1},
@@ -14,6 +14,11 @@ describe("with LabelStore", () => {
         ];
         this.labelsCount = labels.length;
         this.labelStore = new LabelStore(linesCount, labels);
+    });
+
+    afterEach(() => {
+        this.labelsCount = 0;
+        delete this.labelStore;
     });
 
     it('should support query all labels', () => {
@@ -56,5 +61,13 @@ describe("with LabelStore", () => {
         const labelInLineTwo:Label = labelsInLineTwo[0];
         expect(labelInLineOne.id).toEqual(1);
         expect(labelInLineTwo.id).toEqual(2);
+    });
+
+    it("should support add new label into itself", () => {
+        const label:Label = this.labelStore.add(1, [129, 140]);
+        expect(label.id).toEqual(3);
+        const labelLineRange:LabelLineRange = this.labelStore.getLabelLineRangeById(label.id);
+        expect(labelLineRange[0].line).toEqual(2);
+        expect(labelLineRange[0].position).toEqual(2);
     });
 });
