@@ -42,30 +42,30 @@ export class LabelStore extends Store {
         });
     }
 
-    public getLabels(): Label[] {
+    public select(): Label[] {
         return clone(this._labels);
     }
 
-    public getLabelById(id: LabelID): Label {
+    public getById(id: LabelID): Label {
         invariant(
             this._IDMap[id],
-            `LabelStore.getLabelById: Label id(${id}) does not map to a registered label)`
+            `LabelStore.getById: Label id(${id}) does not map to a registered label)`
         );
         return clone(this._IDMap[id]);
     }
 
-    public selectLabelsByLine(lineNumber: LineNumber): Label[] {
+    public selectByLine(lineNumber: LineNumber): Label[] {
         invariant(
             lineNumber < this._labelsInLines.length && lineNumber >= 0,
-            `LabelStore.getLabelsByLine: Line number #${lineNumber} is out of range`
+            `LabelStore.selectByLine: Line number #${lineNumber} is out of range`
         );
         return clone(this._labelsInLines[lineNumber]);
     }
 
-    public getLabelLineRangeById(id: LabelID): LabelLineRange {
+    public getLineRangeById(id: LabelID): LabelLineRange {
         invariant(
             this._IDMap[id],
-            `LabelStore.getLabelLineRangeById: Label id(${id}) does not map to a registered label)`
+            `LabelStore.getLineRangeById: Label id(${id}) does not map to a registered label)`
         );
         const totalChars:number = end(this._linesAccumulatedCount);
         const [startPos, endPos] = this._IDMap[id].pos;
@@ -111,7 +111,7 @@ export class LabelStore extends Store {
     }
 
     private _parseLabelInLines(label: Label): void {
-        const [{line: startLine}, {line: endLine}] = this.getLabelLineRangeById(label.id);
+        const [{line: startLine}, {line: endLine}] = this.getLineRangeById(label.id);
         nestPush(this._labelsInLines, startLine, label);
         if (startLine !== endLine)
             nestPush(this._labelsInLines, endLine, label);

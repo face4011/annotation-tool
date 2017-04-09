@@ -22,12 +22,12 @@ describe("with LabelStore", () => {
     });
 
     it('should support query all labels', () => {
-        const labels: Array<Label> = this.labelStore.getLabels();
+        const labels: Array<Label> = this.labelStore.select();
         expect(labels.length).toEqual(this.labelsCount);
     });
 
     it('should support retrieve a label by id', () => {
-        const label: Label = this.labelStore.getLabelById(2);
+        const label: Label = this.labelStore.getById(2);
         expect(label.id).toEqual(2);
         expect(label.pos[1]).toEqual(81);
         expect(label.category).toEqual(4);
@@ -41,20 +41,20 @@ describe("with LabelStore", () => {
     });
 
     it("should support retrieve specific label's range", () => {
-        const testRangeOne: LabelLineRange = this.labelStore.getLabelLineRangeById(1);
+        const testRangeOne: LabelLineRange = this.labelStore.getLineRangeById(1);
         expect(testRangeOne[0].line).toEqual(0);
         expect(testRangeOne[0].position).toEqual(1);
         expect(testRangeOne[1].line).toEqual(0);
         expect(testRangeOne[1].position).toEqual(5);
-        const testRangeTwo: LabelLineRange = this.labelStore.getLabelLineRangeById(2);
+        const testRangeTwo: LabelLineRange = this.labelStore.getLineRangeById(2);
         expect(testRangeTwo[0].line).toEqual(0);
         expect(testRangeTwo[1].line).toEqual(1);
         expect(testRangeTwo[1].position).toEqual(23);
     });
 
     it("should support select labels according to line number", () => {
-        const labelsInLineOne:Label[] = this.labelStore.selectLabelsByLine(0);
-        const labelsInLineTwo:Label[] = this.labelStore.selectLabelsByLine(1);
+        const labelsInLineOne:Label[] = this.labelStore.selectByLine(0);
+        const labelsInLineTwo:Label[] = this.labelStore.selectByLine(1);
         expect(labelsInLineOne.length).toEqual(2);
         expect(labelsInLineTwo.length).toEqual(1);
         const labelInLineOne:Label = labelsInLineOne[0];
@@ -66,7 +66,7 @@ describe("with LabelStore", () => {
     it("should support add new label into itself", () => {
         const label:Label = this.labelStore.add(1, [129, 140]);
         expect(label.id).toEqual(3);
-        const labelLineRange:LabelLineRange = this.labelStore.getLabelLineRangeById(label.id);
+        const labelLineRange:LabelLineRange = this.labelStore.getLineRangeById(label.id);
         expect(labelLineRange[0].line).toEqual(2);
         expect(labelLineRange[0].position).toEqual(2);
     });
