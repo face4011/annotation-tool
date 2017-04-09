@@ -117,7 +117,7 @@ export class LabelStore extends Store {
             nestPush(this._labelsInLines, endLine, label);
     }
 
-    private _setIDMap(label: Label) {
+    private _setIDMap(label: Label): void {
         invariant(
             this._IDMap[label.id] === undefined,
             `LabelStore._setIDMap: Label id#${label.id} is duplicated`
@@ -125,7 +125,7 @@ export class LabelStore extends Store {
         this._IDMap[label.id] = label;
     }
 
-    private _clear(update:boolean=false) {
+    private _clear(update:boolean=false): void {
         if (!update) {
             this._linesCount = [];
             this._labels = [];

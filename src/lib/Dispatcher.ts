@@ -99,5 +99,3 @@ export class Dispatcher<TPayload> {
         this._isDispatching = false;
     }
 }
-
-// TODO: review keyword `delete`, implement 'storage' module
