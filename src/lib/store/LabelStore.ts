@@ -1,7 +1,7 @@
 /**
  * Created by grzhan on 17/1/10.
  */
-import {Util, invariant, clone, end, endIndex, nestPush, each} from '../common/Util';
+import {Util, invariant, clone, end, endIndex, nestPush, each, remove} from '../common/Util';
 import {Store} from "./Store";
 
 export type LabelID = number;
@@ -38,7 +38,7 @@ export class LabelStore extends Store {
             return sum;
         }, 0);
         each(labels, (label) => {
-            this._updateLabelState(label);
+            this._updateState(label);
         });
     }
 
@@ -65,7 +65,7 @@ export class LabelStore extends Store {
     public getLineRangeById(id: LabelID): LabelLineRange {
         invariant(
             this._IDMap[id],
-            `LabelStore.getLineRangeById: Label id(${id}) does not map to a registered label)`
+            `LabelStore.getLineRangeById: Label ID(${id}) does not map to a registered label)`
         );
         const totalChars:number = end(this._linesAccumulatedCount);
         const [startPos, endPos] = this._IDMap[id].pos;
@@ -81,10 +81,17 @@ export class LabelStore extends Store {
     }
 
     public add(category:number, position: [number, number]):Label {
-        const id:number = this._lastID + 1;
+        const id:LabelID = this._lastID + 1;
         const label:Label = {category, pos: position, id};
-        this._updateLabelState(label);
+        this._labels.push(label);
+        this._updateState(label);
         return label;
+    }
+
+    public remove(id: LabelID) {
+        const label:Label = this._IDMap[id];
+        invariant(label, `LabelStore.remove: Label ID(${id}) does not map to a registered label`);
+        this._evictState(label);
     }
 
     private _binarySearchLineNumber(position: number,
@@ -104,10 +111,20 @@ export class LabelStore extends Store {
             : this._binarySearchLineNumber(position, middle + 1, end);
     }
 
-    private _updateLabelState(label:Label): void {
+    private _updateState(label:Label): void {
         this._setIDMap(label);
         this._parseLabelInLines(label);
         this._lastID = Math.max(this._lastID, label.id);
+    }
+
+    private _evictState(label:Label): void {
+        const id:LabelID = label.id;
+        delete this._IDMap[id];
+        each(this._labelsInLines, (labelsInLine: Array<Label>) => {
+            remove(labelsInLine, label);
+        });
+        remove(this._labels, label);
+        this._lastID = this._labels.reduce((x, y) => Math.max(x, y.id), 0);
     }
 
     private _parseLabelInLines(label: Label): void {

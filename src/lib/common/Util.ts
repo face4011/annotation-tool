@@ -84,3 +84,7 @@ export const nestPush = <T>(arr:Array<Array<T>>, index: number, element: T):numb
     return arr[index].push(element);
 };
 
+export const remove = <T>(arr:T[], element:T): T[] => {
+    const index = arr.indexOf(element);
+    return index >= 0 ? arr.splice(index, 1) : [];
+};

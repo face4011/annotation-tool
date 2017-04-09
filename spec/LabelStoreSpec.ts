@@ -69,5 +69,14 @@ describe("with LabelStore", () => {
         const labelLineRange:LabelLineRange = this.labelStore.getLineRangeById(label.id);
         expect(labelLineRange[0].line).toEqual(2);
         expect(labelLineRange[0].position).toEqual(2);
+        expect(this.labelStore.select().length).toEqual(3);
+    });
+
+    it("should support remove specified label from itself", () => {
+        this.labelStore.remove(2);
+        expect(this.labelStore['_lastID']).toEqual(1);
+        expect(this.labelStore.select().length).toEqual(1);
+        expect(() => {this.labelStore.getById(2)}).toThrow();
+        expect(this.labelStore['_labelsInLines'][1].length).toEqual(0);
     });
 });
