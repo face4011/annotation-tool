@@ -1,4 +1,4 @@
-import {Label, LabelData} from "../store/LabelStore";
+import {Label, LabelData} from "../store/Label";
 import {Util} from "../common/Util";
 
 /**
