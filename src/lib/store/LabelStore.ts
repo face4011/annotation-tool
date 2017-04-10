@@ -88,6 +88,13 @@ export class LabelStore extends Store {
         return label;
     }
 
+    public setCategoryById(id: LabelID, category:number) : Label {
+        const label:Label = this._IDMap[id];
+        invariant(label, `LabelStore.setCategoryById: Label ID(${id}) does not map to a registered label`);
+        label.category = category;
+        return clone(label);
+    }
+
     public remove(id: LabelID) {
         const label:Label = this._IDMap[id];
         invariant(label, `LabelStore.remove: Label ID(${id}) does not map to a registered label`);

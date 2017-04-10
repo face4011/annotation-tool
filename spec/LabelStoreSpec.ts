@@ -79,4 +79,11 @@ describe("with LabelStore", () => {
         expect(() => {this.labelStore.getById(2)}).toThrow();
         expect(this.labelStore['_labelsInLines'][1].length).toEqual(0);
     });
+
+    it("should support set label category by ID", () => {
+        let label:Label = this.labelStore.setCategoryById(1, 3);
+        expect(label.category).toEqual(3);
+        label = this.labelStore.getById(1);
+        expect(label.category).toEqual(3);
+    });
 });
