@@ -3,7 +3,8 @@
  */
 /// <reference path="../typings/index.d.ts" />
 
-import {LabelStore, LinesCount, Label, LabelLineRange} from "../src/lib/store/Label";
+import {LabelStore, Label} from "../src/lib/store/Label";
+import {LinesCount, LabelLineRange} from "../src/lib/store/Line";
 
 describe("with LabelStore", () => {
     beforeEach(() => {

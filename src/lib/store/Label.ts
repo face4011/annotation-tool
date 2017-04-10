@@ -3,18 +3,13 @@
  */
 import {Util, invariant, clone, end, endIndex, nestPush, each, remove} from '../common/Util';
 import {Store} from "./Store";
+import {LinesCount, LineNumber, LinePosition, LabelLineRange} from './Line';
+import {LabelCategoryID} from "./Category";
 
 export type LabelID = number;
-export type LinesCount = number[];
-export type LineNumber = number;
-export interface LinePosition {
-    line: LineNumber,
-    position: number
-}
-export type LabelLineRange = [LinePosition, LinePosition];
 export interface Label {
-    id:number;
-    category: number;
+    id:LabelID;
+    category: LabelCategoryID;
     pos: [number, number];
 }
 
@@ -25,7 +20,7 @@ export class LabelStore extends Store {
     private _labels: Label[];
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
-    private _lastID: number;
+    private _lastID: LabelID;
 
     constructor(linesCount: LinesCount, labels: Label[]) {
         super();
@@ -80,18 +75,25 @@ export class LabelStore extends Store {
         return [startLinePosition, endLinePosition];
     }
 
-    public add(category:number, position: [number, number]):Label {
+    public add(category:LabelCategoryID, position: [number, number]):Label {
         const id:LabelID = this._lastID + 1;
         const label:Label = {category, pos: position, id};
-        this._labels.push(label);
-        this._updateState(label);
+        try {
+            this._labels.push(label);
+            this._updateState(label);
+        } catch (e) {
+            this._evictState(label);
+            throw e;
+        }
+        this.emit('created', clone(label));
         return label;
     }
 
-    public setCategoryById(id: LabelID, category:number) : Label {
+    public setCategoryById(id: LabelID, category:LabelCategoryID) : Label {
         const label:Label = this._IDMap[id];
         invariant(label, `LabelStore.setCategoryById: Label ID(${id}) does not map to a registered label`);
         label.category = category;
+        this.emit('changed', clone(label));
         return clone(label);
     }
 
@@ -99,6 +101,7 @@ export class LabelStore extends Store {
         const label:Label = this._IDMap[id];
         invariant(label, `LabelStore.remove: Label ID(${id}) does not map to a registered label`);
         this._evictState(label);
+        this.emit('deleted', clone(label));
     }
 
     private _binarySearchLineNumber(position: number,
