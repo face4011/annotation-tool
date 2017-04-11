@@ -97,7 +97,7 @@ export class LabelStore extends Store {
         return clone(label);
     }
 
-    public remove(id: LabelID) {
+    public remove(id: LabelID) : void {
         const label:Label = this._IDMap[id];
         invariant(label, `LabelStore.remove: Label ID(${id}) does not map to a registered label`);
         this._evictState(label);

@@ -53,16 +53,33 @@ export class RelationStore extends Store {
         return relation;
     }
 
+    public remove(id: RelationID): void {
+        const relation:Relation = this._IDMap[id];
+        invariant(relation, `RelationStore.remove: Relation ID(${id}) does not map to a registered relation`);
+        this._evictState(relation);
+        this.emit('deleted', clone(remove));
+    }
+
+    public removeByLabel(id: LabelID): void {
+        const relationsToDelete: Relation[] = this._relations.filter(
+            (relation) => relation.src == id || relation.dst == id
+        );
+        each(relationsToDelete, (relation) => {
+            this._evictState(relation, true);
+        });
+        this._lastID = this._relations.reduce((x, y) => Math.max(x, y.id), 0);
+    }
+
     private _updateState(relation: Relation):void {
         this._setIDMap(relation);
         this._lastID = Math.max(this._lastID, relation.id);
     }
 
-    private _evictState(relation:Relation): void {
+    private _evictState(relation:Relation, lazy: boolean=false): void {
         const id:RelationID = relation.id;
         delete this._IDMap[id];
         remove(this._relations, relation);
-        this._lastID = this._relations.reduce((x, y) => Math.max(x, y.id), 0);
+        if (!lazy) this._lastID = this._relations.reduce((x, y) => Math.max(x, y.id), 0);
     }
 
     private  _setIDMap(relation: Relation): void {
