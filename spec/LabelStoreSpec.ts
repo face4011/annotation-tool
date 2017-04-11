@@ -1,7 +1,6 @@
 /**
  * Created by grzhan on 17/4/4.
  */
-/// <reference path="../typings/index.d.ts" />
 
 import {LabelStore, Label} from "../src/lib/store/Label";
 import {LinesCount, LabelLineRange} from "../src/lib/store/Line";

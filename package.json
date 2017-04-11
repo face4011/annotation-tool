@@ -3,6 +3,7 @@
   "version": "0.4.27",
   "description": "A svg library for medical history annotation (NLP)",
   "dependencies": {
+    "@types/core-js": "^0.9.41",
     "svgjs": "^2.2.5",
     "systemjs": "^0.19.31"
   },
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/synyi/annotation-tool",
   "devDependencies": {
+    "@types/jasmine": "^2.5.47",
     "browser-sync": "^2.12.4",
     "gulp": "^3.9.1",
     "gulp-cssnano": "^2.1.1",
