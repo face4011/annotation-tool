@@ -68,6 +68,7 @@ export class RelationStore extends Store {
             this._evictState(relation, true);
         });
         this._lastID = this._relations.reduce((x, y) => Math.max(x, y.id), 0);
+        this.emit('deleted by label', clone(relationsToDelete));
     }
 
     private _updateState(relation: Relation):void {

@@ -88,3 +88,7 @@ export const remove = <T>(arr:T[], element:T): T[] => {
     const index = arr.indexOf(element);
     return index >= 0 ? arr.splice(index, 1) : [];
 };
+
+export const isUndefined = (target:any): boolean => {
+    return target === undefined;
+};

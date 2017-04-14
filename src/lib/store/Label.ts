@@ -1,7 +1,8 @@
 /**
  * Created by grzhan on 17/1/10.
  */
-import {Util, invariant, clone, end, endIndex, nestPush, each, remove} from '../common/Util';
+import {invariant, clone, end, endIndex, nestPush, each, remove} from '../common/Util';
+import {Cache, memorize} from '../common/Cache';
 import {Store} from "./Store";
 import {LinesCount, LineNumber, LinePosition, LabelLineRange} from './Line';
 import {LabelCategoryID} from "./Category";
@@ -21,6 +22,7 @@ export class LabelStore extends Store {
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
     private _lastID: LabelID;
+    static cache = new Cache();
 
     constructor(linesCount: LinesCount, labels: Label[]) {
         super();
@@ -57,6 +59,7 @@ export class LabelStore extends Store {
         return clone(this._labelsInLines[lineNumber]);
     }
 
+    @memorize
     public getLineRangeById(id: LabelID): LabelLineRange {
         invariant(
             this._IDMap[id],
@@ -157,9 +160,11 @@ export class LabelStore extends Store {
             this._linesCount = [];
             this._labels = [];
         }
+        LabelStore.cache.clear();
         this._labelsInLines = [];
         this._linesAccumulatedCount = [];
         this._IDMap = {};
         this._lastID = 0;
     }
+
 }
