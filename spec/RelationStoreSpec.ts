@@ -40,6 +40,10 @@ describe('with RelationStore', () => {
     });
 
     it('should support remove specified relation from itself', () => {
-
+        this.relationStore.remove(1);
+        const relations: Relation[] = this.relationStore.select();
+        expect(relations.length).toEqual(this.relationCount - 1);
+        expect(this.relationStore['_lastID']).toEqual(2);
+        expect(() => { this.relationStore.getById(1)}).toThrow();
     });
 });

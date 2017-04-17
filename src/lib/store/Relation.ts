@@ -58,7 +58,7 @@ export class RelationStore extends Store {
         const relation:Relation = this._IDMap[id];
         invariant(relation, `RelationStore.remove: Relation ID(${id}) does not map to a registered relation`);
         this._evictState(relation);
-        this.emit('deleted', clone(remove));
+        this.emit('deleted', clone(relation));
     }
 
     public removeByLabel(id: LabelID): void {
