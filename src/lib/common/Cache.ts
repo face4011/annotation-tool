@@ -26,10 +26,10 @@ export class Cache {
     }
 }
 
-// CAUTION: This decorator would implicitly create a Cache instance (_cache) in class's prototype
+// CAUTION: This decorator would implicitly create a Cache instance (_cache) as a static member in target class
 export const memorize = function (target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const func = descriptor.value;
-    const serialize = (args) => (propertyKey + '.' + JSON.stringify(args));
+    const serialize = (args) => (propertyKey + '.' + isPrimitive(args) ? args[0] : JSON.stringify(args));
     if (isUndefined(target.constructor._cache))
         target.constructor._cache = new Cache();
     descriptor.value = function() {
@@ -48,4 +48,13 @@ export const clear = function(target: any, propertyKey: string, descriptor: Prop
     if (target.constructor._cache instanceof Cache)
         target.constructor._cache.clear();
     return descriptor;
+};
+
+const isPrimitive = (args: any[]): boolean => {
+    if (args.length === 1) {
+        const arg = args[0];
+        const type = typeof arg;
+        return arg == null || (type != "object" && type != "function")
+    }
+    return false;
 };
