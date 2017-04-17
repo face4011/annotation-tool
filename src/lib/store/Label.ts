@@ -2,7 +2,7 @@
  * Created by grzhan on 17/1/10.
  */
 import {invariant, clone, end, endIndex, nestPush, each, remove} from '../common/Util';
-import {Cache, memorize} from '../common/Cache';
+import {Cache, memorize, clear} from '../common/Cache';
 import {Store} from "./Store";
 import {LinesCount, LineNumber, LinePosition, LabelLineRange} from './Line';
 import {LabelCategoryID} from "./Category";
@@ -23,7 +23,6 @@ export class LabelStore extends Store {
     private _labelsInLines: Array<Array<Label>>;
     private _IDMap: {[LabelID: number]: Label};
     private _lastID: LabelID;
-    static cache = new Cache();
 
     constructor(dispatcher: Dispatcher<any>, linesCount: LinesCount, labels: Label[]) {
         super(dispatcher);
@@ -156,12 +155,12 @@ export class LabelStore extends Store {
         this._IDMap[label.id] = label;
     }
 
+    @clear
     private _clear(update:boolean=false): void {
         if (!update) {
             this._linesCount = [];
             this._labels = [];
         }
-        LabelStore.cache.clear();
         this._labelsInLines = [];
         this._linesAccumulatedCount = [];
         this._IDMap = {};

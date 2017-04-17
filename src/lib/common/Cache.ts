@@ -1,3 +1,4 @@
+import {isUndefined} from "./Util";
 /**
  * Created by grzhan on 17/4/15.
  */
@@ -25,12 +26,14 @@ export class Cache {
     }
 }
 
-// Target class should have a static member: cache
+// CAUTION: This decorator would implicitly create a Cache instance (_cache) in class's prototype
 export const memorize = function (target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const func = descriptor.value;
     const serialize = (args) => (propertyKey + '.' + JSON.stringify(args));
+    if (isUndefined(target.constructor._cache))
+        target.constructor._cache = new Cache();
     descriptor.value = function() {
-        const cache:Cache = target.constructor.cache;
+        const cache:Cache = target.constructor._cache;
         const key = serialize(arguments);
         if (cache.has(key))
             return cache.get(key);
@@ -38,5 +41,11 @@ export const memorize = function (target: any, propertyKey: string, descriptor: 
         cache.set(key, ret);
         return ret;
     };
+    return descriptor;
+};
+
+export const clear = function(target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+    if (target.constructor._cache instanceof Cache)
+        target.constructor._cache.clear();
     return descriptor;
 };
