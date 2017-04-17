@@ -4,6 +4,7 @@
 
 import {LabelStore, Label} from "../src/lib/store/Label";
 import {LinesCount, LabelLineRange} from "../src/lib/store/Line";
+import {Dispatcher} from "../src/lib/Dispatcher";
 
 describe("with LabelStore", () => {
     beforeEach(() => {
@@ -12,8 +13,9 @@ describe("with LabelStore", () => {
             {id:1, pos:[1,5], category: 1},
             {id:2, pos:[57, 81], category: 4}
         ];
+        const dispatcher: Dispatcher<any> = new Dispatcher();
         this.labelsCount = labels.length;
-        this.labelStore = new LabelStore(linesCount, labels);
+        this.labelStore = new LabelStore(dispatcher, linesCount, labels);
     });
 
     afterEach(() => {

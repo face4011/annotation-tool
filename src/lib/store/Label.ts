@@ -6,6 +6,7 @@ import {Cache, memorize} from '../common/Cache';
 import {Store} from "./Store";
 import {LinesCount, LineNumber, LinePosition, LabelLineRange} from './Line';
 import {LabelCategoryID} from "./Category";
+import {Dispatcher} from "../Dispatcher";
 
 export type LabelID = number;
 export interface Label {
@@ -24,8 +25,8 @@ export class LabelStore extends Store {
     private _lastID: LabelID;
     static cache = new Cache();
 
-    constructor(linesCount: LinesCount, labels: Label[]) {
-        super();
+    constructor(dispatcher: Dispatcher<any>, linesCount: LinesCount, labels: Label[]) {
+        super(dispatcher);
         this._clear();
         this._labels = labels;
         this._linesCount = linesCount;
@@ -96,7 +97,7 @@ export class LabelStore extends Store {
         const label:Label = this._IDMap[id];
         invariant(label, `LabelStore.setCategoryById: Label ID(${id}) does not map to a registered label`);
         label.category = category;
-        this.emit('changed', clone(label));
+        this.emit('updated', clone(label));
         return clone(label);
     }
 
@@ -166,5 +167,4 @@ export class LabelStore extends Store {
         this._IDMap = {};
         this._lastID = 0;
     }
-
 }

@@ -5,6 +5,7 @@ import {LabelID, LabelStore} from "./Label";
 import {Store} from "./Store";
 import {each, clone, invariant, remove} from "../common/Util";
 import {RelationCategoryID} from "./Category";
+import {Dispatcher} from "../Dispatcher";
 export type RelationID = number;
 export interface Relation {
     id: RelationID;
@@ -18,8 +19,8 @@ export class RelationStore extends Store {
     private _IDMap: {[RelationID: number]: Relation};
     private _lastID: RelationID;
 
-    constructor(relations: Relation[]) {
-        super();
+    constructor(dispatcher: Dispatcher<any>, relations: Relation[]) {
+        super(dispatcher);
         this._clear();
         this._relations = relations;
         each(relations, (relation) => {

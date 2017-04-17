@@ -2,6 +2,7 @@
  * Created by grzhan on 17/4/12.
  */
 import {Relation, RelationStore} from "../src/lib/store/Relation";
+import {Dispatcher} from "../src/lib/Dispatcher";
 
 describe('with RelationStore', () => {
     beforeEach(() => {
@@ -9,8 +10,9 @@ describe('with RelationStore', () => {
             {id:1, src:1, dst:2, category:2},
             {id:2, src:2, dst:4, category:1}
         ];
+        const dispatcher: Dispatcher<any> = new Dispatcher();
         this.relationCount = relations.length;
-        this.relationStore = new RelationStore(relations);
+        this.relationStore = new RelationStore(dispatcher, relations);
     });
 
     afterEach(() => {

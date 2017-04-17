@@ -26,7 +26,7 @@ export class Cache {
 }
 
 // Target class should have a static member: cache
-export const memorize = function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+export const memorize = function (target: any, propertyKey: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const func = descriptor.value;
     const serialize = (args) => (propertyKey + '.' + JSON.stringify(args));
     descriptor.value = function() {
